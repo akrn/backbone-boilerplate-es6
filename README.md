@@ -7,6 +7,7 @@ My attempt to create a boilerplate for starting a [Backbone.js](http://backbonej
  * [Gulp](http://gulpjs.com)
  * [Handlebars](http://handlebarsjs.com)
  * [less.js](http://lesscss.org)
+ * [Browsersync](http://www.browsersync.io)
 
 ### Usage
 First, install Gulp globally:
@@ -38,4 +39,4 @@ $ gulp build
  * Testing support
  * Support for multiple environments
  * Documentation support
- * Replace gulp-connect
+ * ~~Replace gulp-connect~~

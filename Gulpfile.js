@@ -9,12 +9,12 @@ var uglify = require('gulp-uglify');
 var less = require('gulp-less');
 var minifyCSS = require('gulp-minify-css');
 var rename = require('gulp-rename');
-var connect = require('gulp-connect');
+var browserSync = require('browser-sync');
 
 var config = {
   PORT: 8080,
-  SRC_DIR: './src/',
-  BUILD_DIR: './build/',
+  SRC_DIR: 'src/',
+  BUILD_DIR: 'build/',
 };
 
 
@@ -34,7 +34,7 @@ gulp.task('scripts', function() {
       .pipe(uglify()) // TODO: do not uglify when running dev environment
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(config.BUILD_DIR + 'js'))
-    .pipe(connect.reload());
+    .pipe(browserSync.reload({ stream: true }));
 });
 
 
@@ -46,32 +46,28 @@ gulp.task('styles', function() {
     .pipe(rename('bundle.min.css'))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(config.BUILD_DIR + 'css'))
-    .pipe(connect.reload());
+    .pipe(browserSync.reload({ stream: true }));
 });
 
 
 gulp.task('html', function() {
   return gulp.src(config.SRC_DIR + 'index.html')
     .pipe(gulp.dest(config.BUILD_DIR))
-    .pipe(connect.reload());
-});
-
-
-gulp.task('connect', function() {
-  connect.server({
-    root: config.BUILD_DIR,
-    port: config.PORT,
-    livereload: true
-  });
-});
-
-
-gulp.task('watch', function() {
-  gulp.watch(config.SRC_DIR + 'app/**/*.js', ['scripts']);
-  gulp.watch(config.SRC_DIR + 'styles/**/*.less', ['styles']);
-  gulp.watch(config.SRC_DIR + 'index.html', ['html']);
+    .pipe(browserSync.reload({ stream: true }));
 });
 
 
 gulp.task('build', ['scripts', 'styles', 'html']);
-gulp.task('server', ['build', 'connect', 'watch']);
+
+gulp.task('server', ['build'], function() {
+  browserSync({
+    port: config.PORT,
+    server: {
+      baseDir: config.BUILD_DIR
+    }
+  });
+
+  gulp.watch(config.SRC_DIR + 'app/**/*.js', ['scripts']);
+  gulp.watch(config.SRC_DIR + 'styles/**/*.less', ['styles']);
+  gulp.watch(config.SRC_DIR + 'index.html', ['html']);
+});
