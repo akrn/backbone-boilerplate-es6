@@ -7,6 +7,7 @@ var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
 var less = require('gulp-less');
+var LessAutoprefixPlugin = require('less-plugin-autoprefix');
 var minifyCSS = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var browserSync = require('browser-sync');
@@ -14,8 +15,10 @@ var browserSync = require('browser-sync');
 var config = {
   PORT: 8080,
   SRC_DIR: 'src/',
-  BUILD_DIR: 'build/',
+  BUILD_DIR: 'build/'
 };
+
+var lessAutoprefixPlugin = new LessAutoprefixPlugin({ browsers: '> 1%' });
 
 
 gulp.task('scripts', function() {
@@ -40,11 +43,13 @@ gulp.task('scripts', function() {
 
 gulp.task('styles', function() {
   return gulp.src(config.SRC_DIR + 'styles/index.less', { base: '.' })
-    .pipe(sourcemaps.init())
-    .pipe(less())
+    // .pipe(sourcemaps.init())
+    .pipe(less({
+      plugins: [lessAutoprefixPlugin]
+    }))
     .pipe(minifyCSS())
     .pipe(rename('bundle.min.css'))
-    .pipe(sourcemaps.write('./'))
+    // .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(config.BUILD_DIR + 'css'))
     .pipe(browserSync.reload({ stream: true }));
 });
