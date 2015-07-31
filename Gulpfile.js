@@ -20,7 +20,14 @@ var config = {
   PORT: 8080,
   // Relative paths to sources and output directories
   SRC_DIR: 'src/',
-  BUILD_DIR: 'build/'
+  BUILD_DIR: 'build/',
+
+  src: function(path) {
+    return this.SRC_DIR + path;
+  },
+  dest: function(path) {
+    return this.BUILD_DIR + path;
+  }
 };
 
 var lessAutoprefixPlugin = new LessAutoprefixPlugin({ browsers: '> 1%' });
@@ -28,7 +35,7 @@ var lessAutoprefixPlugin = new LessAutoprefixPlugin({ browsers: '> 1%' });
 
 gulp.task('scripts', function() {
   var bundler = browserify({
-    entries: config.SRC_DIR + 'app/index.js',
+    entries: config.src('app/index.js'),
     debug: true,
     transform: [hbsfy]
   });
@@ -43,13 +50,13 @@ gulp.task('scripts', function() {
       gulpif(config.PRODUCTION, uglify())
     )
     .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest(config.BUILD_DIR + 'js'))
+    .pipe(gulp.dest(config.dest('js')))
     .pipe(browserSync.reload({ stream: true }));
 });
 
 
 gulp.task('styles', function() {
-  return gulp.src(config.SRC_DIR + 'styles/index.less', { base: '.' })
+  return gulp.src(config.src('styles/index.less'), { base: '.' })
     // .pipe(sourcemaps.init())
     .pipe(less({
       plugins: [lessAutoprefixPlugin]
@@ -59,13 +66,13 @@ gulp.task('styles', function() {
     )
     .pipe(rename('bundle.css'))
     // .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest(config.BUILD_DIR + 'css'))
+    .pipe(gulp.dest(config.dest('css')))
     .pipe(browserSync.reload({ stream: true }));
 });
 
 
 gulp.task('html', function() {
-  return gulp.src(config.SRC_DIR + 'index.html')
+  return gulp.src(config.src('index.html'))
     .pipe(gulp.dest(config.BUILD_DIR))
     .pipe(browserSync.reload({ stream: true }));
 });
@@ -89,10 +96,9 @@ gulp.task('server', ['build'], function() {
     }
   });
 
-  gulp.watch(config.SRC_DIR + 'app/**/*.js', ['scripts']);
-  gulp.watch(config.SRC_DIR + 'app/**/*.hbs', ['scripts']);
-  gulp.watch(config.SRC_DIR + 'styles/**/*.less', ['styles']);
-  gulp.watch(config.SRC_DIR + 'index.html', ['html']);
+  gulp.watch([config.src('app/**/*.js'), config.src('app/**/*.hbs')], ['scripts']);
+  gulp.watch(config.src('styles/**/*.less'), ['styles']);
+  gulp.watch(config.src('index.html'), ['html']);
 })
 
 
