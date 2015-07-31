@@ -26,10 +26,10 @@ $ npm install
 Run development server (port is set to 8080 by default):
 
 ```shell
-$ gulp server
+$ gulp
 ```
 
-To build a minified version of the applicaiton simply run:
+To build a minified version of the applicaiton (production mode) simply run:
 
 ```shell
 $ gulp build
@@ -38,6 +38,6 @@ $ gulp build
 ### Things to do
 
  * Testing support
- * Support for multiple environments
+ * ~~Support for multiple environments~~
  * Documentation support
  * ~~Replace gulp-connect~~
