@@ -7,6 +7,7 @@ My attempt to create a boilerplate for starting a [Backbone.js](http://backbonej
  * [Gulp](http://gulpjs.com)
  * [Handlebars](http://handlebarsjs.com)
  * [less.js](http://lesscss.org)
+ * [Autoprefixer](https://github.com/postcss/autoprefixer)
  * [Browsersync](http://www.browsersync.io)
 
 ### Usage
